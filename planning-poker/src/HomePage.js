@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./components/Navbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import './HomePage.css'
 
 export default function HomePage() {
   const [Username, setUsername] = useState("");
@@ -15,6 +16,42 @@ export default function HomePage() {
 
     console.log("Start Game button clicked with username:", Username);
   }
+
+
+  const [index,setIndex] = useState(0);
+  const [fade,setFade] = useState(true);
+
+  const message = [
+    "We plan together, we win together...",
+    "Every point counts when the team counts...",
+    "Collaboration is the real currency...",
+    "Estimate smart, deliver smarter...",
+    "Turn uncertainty into clarity..."
+  ]
+
+ useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false); 
+      setTimeout(() => {
+        setIndex((prevIndex) => (prevIndex + 1) % message.length);
+        setFade(true);
+      }, 500);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [message.length]);
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div>
@@ -35,7 +72,7 @@ export default function HomePage() {
       >
         Welcome to Planning Poker!!
       </h1>
-      <h2
+      {/* <h2
         style={{
           position: "absolute",
           top: "40%",
@@ -47,7 +84,23 @@ export default function HomePage() {
         }}
       >
         Quote
+      </h2> */}
+
+
+        <h2 className={`slide-text ${fade ? "slide-in" : "slide-out"}`}
+        style={{
+          position: "absolute",
+          top: "40%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          color: "#51b1ffff",
+          fontSize: "26px",
+          fontStyle: "italic",
+        }}
+      >
+        {message[index]}
       </h2>
+
 
       <div
         style={{

@@ -1,7 +1,6 @@
 import koneLogo from '../images/koneLogo.png';
 import './Navbar.css'
 import DarkModeBtn from './DarkModeBtn';
-import {useEffect,useState } from 'react';
 
 
 
