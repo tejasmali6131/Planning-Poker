@@ -1,0 +1,35 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: white;
+  transition: background-color 0.3s ease;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.modeChange {
+  color: #004798ff;
+  transition: color 0.3s ease;
+}
+
+#koneLogo {
+  height: 40px;
+  width: auto;
+}
+
+/* Global button styles */
+button {
+  font-family: inherit;
+}
+
+/* Remove default styles that might interfere */
+* {
+  box-sizing: border-box;
+}
