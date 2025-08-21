@@ -1,4 +1,4 @@
-/* Reset & base styles */
+/*Reset & base styles
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -9,19 +9,16 @@ html, body, #root {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Light theme */
 body.light {
   background-color: #ffffff !important;
   color: #000000 !important;
 }
 
-/* Dark theme */
 body.dark {
   background-color: #121212 !important;
   color: #ffffff !important;
 }
 
-/* Make all elements inherit text color */
 body.light * {
   color: #000000;
 }
@@ -30,7 +27,6 @@ body.dark * {
   color: #ffffff;
 }
 
-/* Buttons */
 button {
   padding: 8px 14px;
   margin: 4px;
@@ -50,7 +46,6 @@ body.dark button {
   color: #ffffff;
 }
 
-/* Header styling */
 header {
   display: flex;
   justify-content: space-between;
@@ -63,7 +58,6 @@ body.dark header {
   border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-/* Utility: center content */
 .center {
   display: flex;
   flex-direction: column;
@@ -71,7 +65,6 @@ body.dark header {
   justify-content: center;
 }
 
-/* Input fields */
 input, textarea {
   padding: 8px;
   border-radius: 4px;
@@ -84,3 +77,4 @@ body.dark textarea {
   border: 1px solid #555;
   color: #ffffff;
 }
+*/

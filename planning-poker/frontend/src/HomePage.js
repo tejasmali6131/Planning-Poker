@@ -41,18 +41,6 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, [message.length]);
 
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <div>
       <div style={{ borderBottom: "1px solid #0068dfff" }}>
