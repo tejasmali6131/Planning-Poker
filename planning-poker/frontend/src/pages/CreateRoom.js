@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import Navbar from "../components/Navbar";
@@ -10,7 +10,7 @@ const DECK_TYPES = {
     },
     MODIFIED_FIBONACCI: {
         name: "Modified Fibonacci",
-        cards: ["0", "½", "1", "2", "3", "5", "8", "13", "20", "40", "100", "?"]
+        cards: ["0", "½", "1", "2", "3", "5", "8", "13", "20", "40", "?"]
     }
 };
 
@@ -19,6 +19,14 @@ export default function CreateRoom() {
     const [selectedDeck, setSelectedDeck] = useState("FIBONACCI");
     const [isCreating, setIsCreating] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const username = localStorage.getItem("username");
+        if (!username) {
+            navigate("/");
+            return;
+        }
+    }, [navigate]);
 
     const handleCreateRoom = async () => {
         if (roomName.trim() === "") {

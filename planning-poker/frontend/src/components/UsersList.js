@@ -122,7 +122,7 @@ export default function UsersList({ players, currentUsername, gameState }) {
             </div>
 
             {/* Game Status */}
-            <div
+            {/* <div
                 style={{
                     padding: "20px",
                     backgroundColor: "white",
@@ -166,10 +166,10 @@ export default function UsersList({ players, currentUsername, gameState }) {
                         {players.filter(p => p.hasVoted || (p.vote !== null && p.vote !== undefined)).length} / {players.length} voted
                     </div>
                 )}
-            </div>
+            </div> */}
 
             {/* Instructions */}
-            <div
+            {/* <div
                 style={{
                     flex: 1,
                     padding: "20px",
@@ -199,49 +199,49 @@ export default function UsersList({ players, currentUsername, gameState }) {
                 >
                     {getInstructions(gameState)}
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
 
-function getGameStatusColor(gameState) {
-    switch (gameState) {
-        case "waiting":
-            return "#6c757d";
-        case "voting":
-            return "#ffc107";
-        case "revealed":
-            return "#28a745";
-        default:
-            return "#6c757d";
-    }
-}
+// function getGameStatusColor(gameState) {
+//     switch (gameState) {
+//         case "waiting":
+//             return "#6c757d";
+//         case "voting":
+//             return "#ffc107";
+//         case "revealed":
+//             return "#28a745";
+//         default:
+//             return "#6c757d";
+//     }
+// }
 
-function getGameStatusText(gameState, userCount) {
-    switch (gameState) {
-        case "waiting":
-            return userCount < 2 ? "Waiting for players..." : "Ready to start voting";
-        case "voting":
-            return "Voting in progress...";
-        case "revealed":
-            return "Votes revealed";
-        default:
-            return "Unknown status";
-    }
-}
+// function getGameStatusText(gameState, userCount) {
+//     switch (gameState) {
+//         case "waiting":
+//             return userCount < 2 ? "Waiting for players..." : "Ready to start voting";
+//         case "voting":
+//             return "Voting in progress...";
+//         case "revealed":
+//             return "Votes revealed";
+//         default:
+//             return "Unknown status";
+//     }
+// }
 
-function getInstructions(gameState) {
-    switch (gameState) {
-        case "waiting":
-            return "Waiting for the room creator to start voting. Make sure everyone who needs to participate has joined the room.";
+// function getInstructions(gameState) {
+//     switch (gameState) {
+//         case "waiting":
+//             return "Waiting for the room creator to start voting. Make sure everyone who needs to participate has joined the room.";
 
-        case "voting":
-            return "Choose your estimation from the cards below. Your vote will remain hidden until everyone has voted and the results are revealed.";
+//         case "voting":
+//             return "Choose your estimation from the cards below. Your vote will remain hidden until everyone has voted and the results are revealed.";
 
-        case "revealed":
-            return "All votes have been revealed. The room creator can start a new round for the next estimation.";
+//         case "revealed":
+//             return "All votes have been revealed. The room creator can start a new round for the next estimation.";
 
-        default:
-            return "Welcome to Planning Poker! Follow the instructions above to participate in the estimation process.";
-    }
-}
+//         default:
+//             return "Welcome to Planning Poker! Follow the instructions above to participate in the estimation process.";
+//     }
+// }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
 import Navbar from "../components/Navbar";
+import { toast } from "react-toastify";
 
 
 export default function LandingPage() {
@@ -29,19 +30,20 @@ export default function LandingPage() {
 
     return () => clearInterval(interval);
   }, [message.length]);
-
+  
   const handleStart = () => {
     if (!username.trim()) {
-      alert('Please enter a username');
+      toast.error("Please enter a username");
       return;
     }
 
     // Save username to localStorage
-    localStorage.setItem('username', username);
+    localStorage.setItem("username", username);
 
     navigate(`/create-room`);
   };
 
+  
   return (
     <div>
       <div style={{ borderBottom: "1px solid #0068dfff" }}>

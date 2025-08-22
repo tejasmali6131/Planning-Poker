@@ -4,6 +4,7 @@ import { io } from 'socket.io-client';
 import Navbar from '../components/Navbar';
 import VotingCards from '../components/VotingCards';
 import UsersList from '../components/UsersList';
+import { toast } from "react-toastify";
 
 const socket = io('http://localhost:4000');
 
@@ -20,6 +21,8 @@ export default function GamePage() {
   const [roomConfig, setRoomConfig] = useState(null);
   const [currentTopic, setCurrentTopic] = useState("");
   const [topicInput, setTopicInput] = useState("");
+  const [showJoinForm, setShowJoinForm] = useState(false);
+  const [joiningUsername, setJoiningUsername] = useState("");
 
   // Default fibonacci series, will be overridden by room config if available
   const defaultCards = [0, 1, 2, 3, 5, 8, 13, 21, 34, 65, "?"];
@@ -27,7 +30,7 @@ export default function GamePage() {
 
   useEffect(() => {
     if (!username) {
-      navigate(`/`);
+      setShowJoinForm(true);
       return;
     }
 
@@ -54,11 +57,27 @@ export default function GamePage() {
     };
   }, [gameId, username, navigate]);
 
+  // Separate useEffect for setting up socket listeners
+  useEffect(() => {
+    socket.on('updateGameState', (state) => {
+      setGameState(state);
+    });
+
+    socket.on('gameRestarted', () => {
+      setVote(null);
+    });
+
+    return () => {
+      socket.off('updateGameState');
+      socket.off('gameRestarted');
+    };
+  }, []);
+
   const handleCopyLink = () => {
     const link = `${window.location.origin}/game/${gameId}`;
     navigator.clipboard.writeText(link)
-      .then(() => alert('Game link copied!'))
-      .catch((err) => console.error('Failed to copy link', err));
+      .then(() => toast.success("Game link copied!"))
+      .catch(() => toast.error("Failed to copy link"));
   };
 
   const handleVote = (num) => {
@@ -81,6 +100,20 @@ export default function GamePage() {
     setCurrentTopic(topicInput);
     setTopicInput("");
     socket.emit('startGame', { gameId, username });
+  };
+
+  const handleJoinGame = () => {
+    if (!joiningUsername.trim()) {
+      toast.error("Please enter a username");
+      return;
+    }
+    
+    // Save username to localStorage
+    localStorage.setItem("username", joiningUsername);
+    setShowJoinForm(false);
+    
+    // Emit join game event
+    socket.emit('joinGame', { gameId, username: joiningUsername });
   };
 
   const allVoted = gameState.players.length > 0 && gameState.players.every((p) => p.hasVoted);
@@ -112,6 +145,97 @@ export default function GamePage() {
   };
 
   const averageResult = calculateAverage();
+
+  // Show join form if user doesn't have a username
+  if (showJoinForm) {
+    return (
+      <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+        <div style={{ borderBottom: "1px solid #0068dfff" }}>
+          <Navbar />
+        </div>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#f8f9fa"
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "40px",
+              borderRadius: "12px",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+              textAlign: "center",
+              maxWidth: "400px",
+              width: "90%"
+            }}
+          >
+            <h2
+              className="modeChange"
+              style={{
+                color: "#004798ff",
+                fontSize: "24px",
+                marginBottom: "10px"
+              }}
+            >
+              Join Planning Session
+            </h2>
+            <p
+              className="modeChange"
+              style={{
+                color: "#666",
+                fontSize: "16px",
+                marginBottom: "20px"
+              }}
+            >
+              Room ID: <strong style={{ color: "#0068dfff" }}>{gameId}</strong>
+            </p>
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={joiningUsername}
+              onChange={(e) => setJoiningUsername(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleJoinGame()}
+              style={{
+                width: "100%",
+                padding: "12px",
+                border: "2px solid #0068dfff",
+                borderRadius: "8px",
+                fontSize: "16px",
+                outline: "none",
+                marginBottom: "20px",
+                boxSizing: "border-box"
+              }}
+              autoFocus
+            />
+            <button
+              onClick={handleJoinGame}
+              style={{
+                width: "100%",
+                padding: "12px",
+                fontSize: "16px",
+                fontWeight: "600",
+                color: "white",
+                backgroundColor: "#0068dfff",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                transition: "background-color 0.3s"
+              }}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = '#004798ff')}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = '#0068dfff')}
+            >
+              Join Game
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>

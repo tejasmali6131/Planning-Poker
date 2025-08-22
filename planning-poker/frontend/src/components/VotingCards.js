@@ -22,7 +22,7 @@ export default function VotingCards({ cards, selectedCard, onCardSelect, gameSta
                     textAlign: "center"
                 }}
             >
-                {gameState === "voting" ? "Choose your estimate:" : "Estimation Cards"}
+                {gameState === "voting" ? "Select a card:" : "Estimation Cards"}
             </h3>
 
             <div
@@ -113,7 +113,7 @@ function getStatusMessage(gameState, disabled, selectedCard) {
         if (selectedCard) {
             return `You selected: ${selectedCard}`;
         }
-        return "Click on a card to make your estimate";
+        return "Click on a card to vote";
     }
 
     if (gameState === "revealed") {
