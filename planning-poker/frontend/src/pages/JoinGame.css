@@ -1,0 +1,79 @@
+/* JoinGame.css */
+
+/* Main container styles */
+.join-game-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.join-game-navbar {
+  border-bottom: 1px solid #0068dfff;
+}
+
+.join-game-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+}
+
+.join-game-card {
+  background-color: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+}
+
+.join-game-title {
+  color: #004798ff;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.join-game-subtitle {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.room-id-highlight {
+  color: #0068dfff;
+}
+
+.join-username-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #0068dfff;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.join-username-input:focus {
+  border-color: #004798ff;
+}
+
+.join-game-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  background-color: #0068dfff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.join-game-btn:hover {
+  background-color: #004798ff;
+}

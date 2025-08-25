@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import VotingCards from '../components/VotingCards';
 import UsersList from '../components/UsersList';
 import { toast } from "react-toastify";
+import './GamePage.css';
 
 const socket = io('http://localhost:4000');
 
@@ -21,8 +22,6 @@ export default function GamePage() {
   const [roomConfig, setRoomConfig] = useState(null);
   const [currentTopic, setCurrentTopic] = useState("");
   const [topicInput, setTopicInput] = useState("");
-  const [showJoinForm, setShowJoinForm] = useState(false);
-  const [joiningUsername, setJoiningUsername] = useState("");
 
   // Default fibonacci series, will be overridden by room config if available
   const defaultCards = [0, 1, 2, 3, 5, 8, 13, 21, 34, 65, "?"];
@@ -30,7 +29,7 @@ export default function GamePage() {
 
   useEffect(() => {
     if (!username) {
-      setShowJoinForm(true);
+      navigate(`/game/${gameId}/join`);
       return;
     }
 
@@ -102,20 +101,6 @@ export default function GamePage() {
     socket.emit('startGame', { gameId, username });
   };
 
-  const handleJoinGame = () => {
-    if (!joiningUsername.trim()) {
-      toast.error("Please enter a username");
-      return;
-    }
-    
-    // Save username to localStorage
-    localStorage.setItem("username", joiningUsername);
-    setShowJoinForm(false);
-    
-    // Emit join game event
-    socket.emit('joinGame', { gameId, username: joiningUsername });
-  };
-
   const allVoted = gameState.players.length > 0 && gameState.players.every((p) => p.hasVoted);
   const isCreator = username === gameState.creator;
 
@@ -146,136 +131,29 @@ export default function GamePage() {
 
   const averageResult = calculateAverage();
 
-  // Show join form if user doesn't have a username
-  if (showJoinForm) {
-    return (
-      <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-        <div style={{ borderBottom: "1px solid #0068dfff" }}>
-          <Navbar />
-        </div>
-        <div
-          style={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#f8f9fa"
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "40px",
-              borderRadius: "12px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-              textAlign: "center",
-              maxWidth: "400px",
-              width: "90%"
-            }}
-          >
-            <h2
-              className="modeChange"
-              style={{
-                color: "#004798ff",
-                fontSize: "24px",
-                marginBottom: "10px"
-              }}
-            >
-              Join Planning Session
-            </h2>
-            <p
-              className="modeChange"
-              style={{
-                color: "#666",
-                fontSize: "16px",
-                marginBottom: "20px"
-              }}
-            >
-              Room ID: <strong style={{ color: "#0068dfff" }}>{gameId}</strong>
-            </p>
-            <input
-              type="text"
-              placeholder="Enter your username"
-              value={joiningUsername}
-              onChange={(e) => setJoiningUsername(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleJoinGame()}
-              style={{
-                width: "100%",
-                padding: "12px",
-                border: "2px solid #0068dfff",
-                borderRadius: "8px",
-                fontSize: "16px",
-                outline: "none",
-                marginBottom: "20px",
-                boxSizing: "border-box"
-              }}
-              autoFocus
-            />
-            <button
-              onClick={handleJoinGame}
-              style={{
-                width: "100%",
-                padding: "12px",
-                fontSize: "16px",
-                fontWeight: "600",
-                color: "white",
-                backgroundColor: "#0068dfff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                transition: "background-color 0.3s"
-              }}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = '#004798ff')}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = '#0068dfff')}
-            >
-              Join Game
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
-      <div style={{ borderBottom: "1px solid #0068dfff" }}>
+    <div className="game-page">
+      <div className="game-page-navbar">
         <Navbar />
       </div>
 
       {/* Room Header */}
-      <div
-        style={{
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderBottom: "1px solid #e0e0e0",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}
-      >
+      <div className="room-header">
         <div>
           <h1
-            className="modeChange"
-            style={{
-              color: "#004798ff",
-              fontSize: "24px",
-              margin: "0 0 5px 0"
-            }}
+            className="modeChange room-title"
           >
             {roomConfig ? roomConfig.name : `Planning Session`}
           </h1>
-          <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+          <div className="room-info">
             <span
-              className="modeChange"
-              style={{ color: "#666", fontSize: "14px" }}
+              className="modeChange room-info-item"
             >
-              Room ID: <strong style={{ color: "#0068dfff", fontSize: "16px" }}>{gameId}</strong>
+              Room ID: <strong className="room-id">{gameId}</strong>
             </span>
             {roomConfig && (
               <span
-                className="modeChange"
-                style={{ color: "#666", fontSize: "14px" }}
+                className="modeChange room-info-item"
               >
                 Deck: {roomConfig.deckType} ({cardsToDisplay.join(", ")})
               </span>
@@ -283,27 +161,10 @@ export default function GamePage() {
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div className="header-buttons">
           <button
             onClick={handleCopyLink}
-            style={{
-              padding: "8px 16px",
-              fontSize: "14px",
-              color: "#0068dfff",
-              backgroundColor: "transparent",
-              border: "2px solid #0068dfff",
-              borderRadius: "6px",
-              cursor: "pointer",
-              transition: "all 0.3s"
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = "#0068dfff";
-              e.target.style.color = "white";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = "transparent";
-              e.target.style.color = "#0068dfff";
-            }}
+            className="copy-link-btn"
           >
             Copy Link
           </button>
@@ -313,16 +174,7 @@ export default function GamePage() {
               {!gameState.started && gameState.players.length >= 2 && (
                 <button
                   onClick={handleStartGame}
-                  style={{
-                    padding: "8px 16px",
-                    fontSize: "14px",
-                    color: "white",
-                    backgroundColor: "#28a745",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    transition: "background-color 0.3s"
-                  }}
+                  className="start-game-btn"
                 >
                   Start Game
                 </button>
@@ -331,16 +183,7 @@ export default function GamePage() {
               {gameState.started && !gameState.revealed && allVoted && (
                 <button
                   onClick={handleReveal}
-                  style={{
-                    padding: "8px 16px",
-                    fontSize: "14px",
-                    color: "white",
-                    backgroundColor: "#ffc107",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    transition: "background-color 0.3s"
-                  }}
+                  className="reveal-cards-btn"
                 >
                   Reveal Cards
                 </button>
@@ -349,16 +192,7 @@ export default function GamePage() {
               {gameState.revealed && (
                 <button
                   onClick={handleRestart}
-                  style={{
-                    padding: "8px 16px",
-                    fontSize: "14px",
-                    color: "white",
-                    backgroundColor: "#0068dfff",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    transition: "background-color 0.3s"
-                  }}
+                  className="new-round-btn"
                 >
                   New Round
                 </button>
@@ -369,30 +203,13 @@ export default function GamePage() {
       </div>
 
       {/* Main Content */}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+      <div className="main-content">
         {/* Game Area */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+        <div className="game-area">
           {/* Center Game State Display */}
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "40px",
-              backgroundColor: "#fafbfc",
-              position: "relative"
-            }}
-          >
+          <div className="game-center">
             <h2
-              className="modeChange"
-              style={{
-                margin: "0 0 20px 0",
-                fontSize: "24px",
-                color: "#004798ff",
-                textAlign: "center"
-              }}
+              className="modeChange game-state-title"
             >
               {currentGameState === "waiting" && "Waiting to Start"}
               {currentGameState === "voting" && "Voting in Progress"}
@@ -401,24 +218,9 @@ export default function GamePage() {
 
             {/* Topic Display */}
             {currentTopic && (
-              <div
-                style={{
-                  marginBottom: "20px",
-                  padding: "12px 20px",
-                  backgroundColor: "#f0f8ff",
-                  border: "2px solid #0068dfff",
-                  borderRadius: "8px",
-                  textAlign: "center"
-                }}
-              >
+              <div className="topic-display">
                 <h3
-                  className="modeChange"
-                  style={{
-                    margin: "0",
-                    fontSize: "18px",
-                    color: "#004798ff",
-                    fontWeight: "600"
-                  }}
+                  className="modeChange topic-title"
                 >
                   Topic: {currentTopic}
                 </h3>
@@ -426,8 +228,8 @@ export default function GamePage() {
             )}
 
             {currentGameState === "waiting" && (
-              <div style={{ textAlign: "center" }}>
-                <p className="modeChange" style={{ fontSize: "16px", color: "#666", marginBottom: "20px" }}>
+              <div className="waiting-content">
+                <p className="modeChange waiting-text">
                   {gameState.players.length < 2
                     ? "Waiting for more players to join..."
                     : "Ready to start voting when the creator begins the session"}
@@ -435,30 +237,19 @@ export default function GamePage() {
 
                 {/* Topic Input for Creator */}
                 {isCreator && gameState.players.length >= 2 && (
-                  <div style={{ marginBottom: "20px" }}>
+                  <div className="topic-input-container">
                     <input
                       type="text"
                       placeholder="Enter topic for this round (optional)"
                       value={topicInput}
                       onChange={(e) => setTopicInput(e.target.value)}
-                      style={{
-                        width: "300px",
-                        padding: "12px",
-                        border: "2px solid #0068dfff",
-                        borderRadius: "8px",
-                        fontSize: "16px",
-                        outline: "none",
-                        transition: "border-color 0.3s",
-                        textAlign: "center"
-                      }}
-                      onFocus={(e) => (e.target.style.borderColor = "#004798ff")}
-                      onBlur={(e) => (e.target.style.borderColor = "#0068dfff")}
+                      className="topic-input"
                     />
                   </div>
                 )}
 
                 {gameState.players.length >= 2 && !isCreator && (
-                  <p className="modeChange" style={{ fontSize: "14px", color: "#999" }}>
+                  <p className="modeChange creator-only-text">
                     Only the room creator can start the voting session
                   </p>
                 )}
@@ -466,12 +257,12 @@ export default function GamePage() {
             )}
 
             {currentGameState === "voting" && (
-              <div style={{ textAlign: "center" }}>
-                <p className="modeChange" style={{ fontSize: "16px", color: "#666", marginBottom: "10px" }}>
+              <div className="voting-content">
+                <p className="modeChange voting-status">
                   {gameState.players.filter(p => p.hasVoted).length} of {gameState.players.length} participants have voted
                 </p>
                 {vote && (
-                  <p className="modeChange" style={{ fontSize: "14px", color: "#28a745", fontWeight: "bold" }}>
+                  <p className="modeChange user-vote">
                     Your vote: {vote}
                   </p>
                 )}
@@ -479,86 +270,37 @@ export default function GamePage() {
             )}
 
             {currentGameState === "revealed" && (
-              <div style={{ textAlign: "center" }}>
-                <h3 className="modeChange" style={{ color: "#28a745", marginBottom: "30px" }}>
+              <div className="revealed-content">
+                <h3 className="modeChange revealed-title">
                   All Votes Revealed!
                 </h3>
 
                 {/* Display All Votes */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    gap: "15px",
-                    maxWidth: "600px",
-                    margin: "20px auto"
-                  }}
-                >
+                <div className="votes-grid">
                   {gameState.players.map((player, index) => (
                     <div
                       key={index}
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        padding: "15px",
-                        backgroundColor: player.username === username ? "#f0f8ff" : "white",
-                        border: player.username === username ? "2px solid #0068dfff" : "1px solid #e0e0e0",
-                        borderRadius: "12px",
-                        minWidth: "120px",
-                        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
-                      }}
+                      className={`player-vote-card ${player.username === username ? 'current-user' : ''}`}
                     >
                       {/* Player Avatar */}
                       <div
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          borderRadius: "50%",
-                          backgroundColor: player.username === username ? "#0068dfff" : "#51b1ffff",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          color: "white",
-                          fontSize: "16px",
-                          fontWeight: "bold",
-                          marginBottom: "10px"
-                        }}
+                        className={`player-avatar ${player.username === username ? 'current-user' : ''}`}
                       >
                         {player.username.charAt(0).toUpperCase()}
                       </div>
 
                       {/* Player Name */}
                       <div
-                        className="modeChange"
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: player.username === username ? "600" : "500",
-                          color: player.username === username ? "#004798ff" : "#333",
-                          marginBottom: "8px",
-                          textAlign: "center"
-                        }}
+                        className={`modeChange player-name ${player.username === username ? 'current-user' : ''}`}
                       >
                         {player.username}
                         {player.username === username && (
-                          <span style={{ color: "#51b1ffff" }}> (You)</span>
+                          <span className="you-indicator"> (You)</span>
                         )}
                       </div>
 
                       {/* Vote Display */}
-                      <div
-                        style={{
-                          padding: "8px 12px",
-                          backgroundColor: "#0068dfff",
-                          color: "white",
-                          borderRadius: "6px",
-                          fontSize: "18px",
-                          fontWeight: "bold",
-                          minWidth: "40px",
-                          textAlign: "center"
-                        }}
-                      >
+                      <div className="vote-display">
                         {player.vote !== null && player.vote !== undefined ? player.vote : "?"}
                       </div>
                     </div>
@@ -567,17 +309,8 @@ export default function GamePage() {
 
                 {/* Show Average if there are numeric votes */}
                 {averageResult && (
-                  <div
-                    style={{
-                      marginTop: "30px",
-                      padding: "15px 25px",
-                      backgroundColor: "#f0f8ff",
-                      border: "2px solid #0068dfff",
-                      borderRadius: "10px",
-                      display: "inline-block"
-                    }}
-                  >
-                    <h4 className="modeChange" style={{ color: "#004798ff", margin: "0" }}>
+                  <div className="average-result">
+                    <h4 className="modeChange average-title">
                       Average: {averageResult}
                     </h4>
                   </div>
@@ -586,24 +319,20 @@ export default function GamePage() {
             )}
           </div>
 
-          {/* Voting Cards */}
-          <VotingCards
-            cards={cardsToDisplay}
-            selectedCard={vote}
-            onCardSelect={handleVote}
-            gameState={currentGameState}
-            disabled={currentGameState !== "voting"}
-          />
+          {/* Voting Cards - Hide when revealed */}
+          {currentGameState !== "revealed" && (
+            <VotingCards
+              cards={cardsToDisplay}
+              selectedCard={vote}
+              onCardSelect={handleVote}
+              gameState={currentGameState}
+              disabled={currentGameState !== "voting"}
+            />
+          )}
         </div>
 
         {/* Users List */}
-        <div
-          style={{
-            width: "300px",
-            borderLeft: "1px solid #e0e0e0",
-            backgroundColor: "#f8f9fa"
-          }}
-        >
+        <div className="users-list">
           <UsersList
             players={gameState.players}
             currentUsername={username}

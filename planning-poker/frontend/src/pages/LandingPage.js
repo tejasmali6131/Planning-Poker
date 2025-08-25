@@ -46,49 +46,23 @@ export default function LandingPage() {
   
   return (
     <div>
-      <div style={{ borderBottom: "1px solid #0068dfff" }}>
+      <div className="landing-page-navbar">
         <Navbar />
       </div>
-      <div
-        style={{
-          width: "100%",
-          height: "85vh",
-          textAlign: "center",
-          justifyContent: "center",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
-        }}
-      >
+      <div className="landing-page-content">
         <h1
-          className="modeChange"
-          style={{
-            color: "#004798ff",
-            fontSize: "50px",
-            textAlign: "center",
-          }}
+          className="modeChange landing-page-title"
         >
           Welcome to Planning Poker!!
         </h1>
 
-        <h2 className={`slide-text ${fade ? "slide-in" : "slide-out"}`}
-          style={{
-            color: "#51b1ffff",
-            fontSize: "26px",
-            fontStyle: "italic",
-          }}
+        <h2 className={`slide-text landing-page-subtitle ${fade ? "slide-in" : "slide-out"}`}
         >
           {message[index]}
         </h2>
       
         <h2
-          className="modeChange"
-          style={{
-            color: '#004798ff',
-            fontSize: '20px',
-            margin: '5px',
-            fontWeight: '600'
-          }}
+          className="modeChange session-title"
         >
           Start a new session
         </h2>
@@ -97,33 +71,12 @@ export default function LandingPage() {
           placeholder="Enter your username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          style={{
-              width: "300px",
-              padding: "12px",
-              border: "2px solid #0068dfff",
-              borderRadius: "8px",
-              fontSize: "16px",
-              outline: "none",
-              transition: "border-color 0.3s",
-              margin: "0 auto",
-            }}
+          onKeyPress={(e) => e.key === 'Enter' && handleStart()}
+          className="username-input"
         />
         <button
           onClick={handleStart}
-          style={{
-            width: "200px",
-            height: "50px",
-            margin: "10px",
-            fontSize: "18px",
-            fontWeight: "600",
-            color: "white",
-            backgroundColor: "#0068dfff",
-            border: "none",
-            cursor: 'pointer',
-            borderRadius: "8px"
-          }}
-          onMouseEnter={(e) => (e.target.style.backgroundColor = '#004798ff')}
-          onMouseLeave={(e) => (e.target.style.backgroundColor = '#0068dfff')}
+          className="submit-btn"
         >
           Submit
         </button>

@@ -1,0 +1,360 @@
+/* GamePage.css */
+
+/* Main container */
+.game-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-page-navbar {
+  border-bottom: 1px solid #0068dfff;
+}
+
+/* Room Header */
+.room-header {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.room-title {
+  color: #004798ff;
+  font-size: 24px;
+  margin: 0 0 5px 0;
+}
+
+.room-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.room-info-item {
+  color: #666;
+  font-size: 14px;
+}
+
+.room-id {
+  color: #0068dfff;
+  font-size: 16px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.copy-link-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #0068dfff;
+  background-color: transparent;
+  border: 2px solid #0068dfff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.copy-link-btn:hover {
+  background-color: #0068dfff;
+  color: white;
+}
+
+.start-game-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: white;
+  background-color: #28a745;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reveal-cards-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: white;
+  background-color: #ffc107;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.new-round-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: white;
+  background-color: #0068dfff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0; /* Important for flex children to respect overflow */
+}
+
+/* Game Area */
+.game-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Important for flex children to respect overflow */
+}
+
+.game-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Changed from center to flex-start */
+  align-items: center;
+  padding: 20px; /* Reduced padding */
+  background-color: #fafbfc;
+  position: relative;
+  overflow-y: auto; /* Allow vertical scrolling */
+  min-height: 0; /* Important for flex children to respect overflow */
+}
+
+.game-state-title {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  color: #004798ff;
+  text-align: center;
+}
+
+/* Topic Display */
+.topic-display {
+  margin-bottom: 20px;
+  padding: 12px 20px;
+  background-color: #f0f8ff;
+  border: 2px solid #0068dfff;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.topic-title {
+  margin: 0;
+  font-size: 18px;
+  color: #004798ff;
+  font-weight: 600;
+}
+
+/* Waiting State */
+.waiting-content {
+  text-align: center;
+  margin-top: auto; /* Push content to center when there's space */
+  margin-bottom: auto;
+}
+
+.waiting-text {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.topic-input-container {
+  margin-bottom: 20px;
+}
+
+.topic-input {
+  width: 300px;
+  padding: 12px;
+  border: 2px solid #0068dfff;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
+  text-align: center;
+}
+
+.topic-input:focus {
+  border-color: #004798ff;
+}
+
+.creator-only-text {
+  font-size: 14px;
+  color: #999;
+}
+
+/* Voting State */
+.voting-content {
+  text-align: center;
+  margin-top: auto; /* Push content to center when there's space */
+  margin-bottom: auto;
+}
+
+.voting-status {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.user-vote {
+  font-size: 14px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Revealed State */
+.revealed-content {
+  text-align: center;
+  width: 100%;
+}
+
+.revealed-title {
+  color: #28a745;
+  margin-bottom: 20px; /* Reduced margin */
+}
+
+.votes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  max-width: 100%; /* Changed from 600px to 100% */
+  margin: 20px auto;
+  padding: 0 10px; /* Add horizontal padding */
+}
+
+.player-vote-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  min-width: 120px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.player-vote-card.current-user {
+  background-color: #f0f8ff;
+  border: 2px solid #0068dfff;
+}
+
+.player-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #51b1ffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.player-avatar.current-user {
+  background-color: #0068dfff;
+}
+
+.player-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.player-name.current-user {
+  font-weight: 600;
+  color: #004798ff;
+}
+
+.you-indicator {
+  color: #51b1ffff;
+}
+
+.vote-display {
+  padding: 8px 12px;
+  background-color: #0068dfff;
+  color: white;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Average Result */
+.average-result {
+  margin-top: 30px;
+  padding: 15px 25px;
+  background-color: #f0f8ff;
+  border: 2px solid #0068dfff;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.average-title {
+  color: #004798ff;
+  margin: 0;
+}
+
+/* Users List */
+.users-list {
+  width: 300px;
+  border-left: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Important for flex children to respect overflow */
+}
+
+/* UsersList component specific styles */
+.users-list-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.users-list-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: white;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.users-list-content {
+  flex: 1;
+  overflow-y: auto; /* Allow scrolling for the participants list */
+  padding: 15px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+  
+  .users-list {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #e0e0e0;
+    max-height: 300px;
+  }
+  
+  .votes-grid {
+    gap: 10px;
+    padding: 0 5px;
+  }
+  
+  .player-vote-card {
+    min-width: 100px;
+    padding: 10px;
+  }
+}
