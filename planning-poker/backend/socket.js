@@ -7,42 +7,16 @@ function setupSocket(io) {
     // Join a game
     socket.on('joinGame', ({ gameId, username }) => {
       console.log(`📥 Player joining game: ${username}`);
-      console.log(`📊 Current games state:`, Object.keys(games).map(id => ({
-        id,
-        players: games[id].players.map(p => p.username),
-        creator: games[id].creator
-      })));
 
       // If game does not exist, create it
       if (!games[gameId]) {
-        games[gameId] = { 
-          players: [], 
-          started: false, 
-          creator: username, 
-          revealed: false,
-          currentTopic: "" 
-        };
+        games[gameId] = { players: [], started: false, creator: username, revealed: false };
         console.log(`🆕 Created new game: ${gameId}`);
       }
 
-      // Check for duplicate usernames in the same game
+      // Prevent duplicate usernames in the same game
       const existingPlayer = games[gameId].players.find(p => p.username === username);
-      if (existingPlayer) {
-        // If it's the same socket trying to rejoin, just update and continue
-        if (existingPlayer.id === socket.id) {
-          console.log(`🔄 Same socket rejoining: ${username} in game ${gameId}`);
-        } else {
-          console.log(`❌ Duplicate username detected: ${username} in game ${gameId}`);
-          // Send error to the specific socket that tried to join with duplicate name
-          socket.emit('joinError', { 
-            message: 'Username already exists!! Try a different one.',
-            type: 'DUPLICATE_USERNAME' 
-          });
-          return; // Don't proceed with joining
-        }
-      } else {
-        console.log(`✅ Adding new player: ${username} to game ${gameId}`);
-        // Add player if username is unique
+      if (!existingPlayer) {
         games[gameId].players.push({ id: socket.id, username, vote: null });
       }
 
@@ -52,12 +26,11 @@ function setupSocket(io) {
     });
 
     // Start game (only creator)
-    socket.on('startGame', ({ gameId, username, topic }) => {
+    socket.on('startGame', ({ gameId, username }) => {
       if (games[gameId] && games[gameId].creator === username) {
         games[gameId].started = true;
-        games[gameId].currentTopic = topic || ""; // Store the topic
         io.to(gameId).emit('updateGameState', games[gameId]);
-        console.log(`🚀 Game started: ${gameId} with topic: "${topic || 'No topic'}"`);
+        console.log(`🚀 Game started: ${gameId}`);
       }
     });
 
@@ -93,7 +66,6 @@ function setupSocket(io) {
         games[gameId].players.forEach(p => p.vote = null);
         games[gameId].started = false;
         games[gameId].revealed = false;
-        games[gameId].currentTopic = ""; // Clear the topic on restart
 
         io.to(gameId).emit('updateGameState', games[gameId]);
         io.to(gameId).emit('gameRestarted');

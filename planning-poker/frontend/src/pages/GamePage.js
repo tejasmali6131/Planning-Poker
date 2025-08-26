@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import Navbar from '../components/Navbar';
@@ -16,19 +16,16 @@ export default function GamePage() {
     players: [],
     creator: null,
     started: false,
-    revealed: false,
-    currentTopic: ""
+    revealed: false
   });
   const [vote, setVote] = useState(null);
   const [roomConfig, setRoomConfig] = useState(null);
+  const [currentTopic, setCurrentTopic] = useState("");
   const [topicInput, setTopicInput] = useState("");
 
   // Default fibonacci series, will be overridden by room config if available
   const defaultCards = [0, 1, 2, 3, 5, 8, 13, 21, 34, 65, "?"];
   const username = localStorage.getItem('username');
-
-  const hasJoinedRef = useRef(null); // Store gameId + username combination
-  const joinErrorShownRef = useRef(false); // Prevent duplicate error toasts
 
   useEffect(() => {
     if (!username) {
@@ -43,46 +40,8 @@ export default function GamePage() {
       setRoomConfig(config);
     }
 
-    // Create a unique key for this join attempt
-    const joinKey = `${gameId}-${username}`;
-    
-    // Only emit joinGame once per unique game-username combination
-    if (hasJoinedRef.current !== joinKey) {
-      console.log('Emitting joinGame for:', username, 'in game:', gameId);
-      socket.emit('joinGame', { gameId, username });
-      hasJoinedRef.current = joinKey;
-    } else {
-      console.log('Skipping duplicate joinGame emission for:', username, 'in game:', gameId);
-    }
+    socket.emit('joinGame', { gameId, username });
 
-    return () => {
-      // Reset on cleanup only if we're leaving this game
-      if (hasJoinedRef.current === joinKey) {
-        hasJoinedRef.current = null;
-      }
-    };
-  }, [gameId, username, navigate]);
-
-  // Separate useEffect for setting up socket listeners
-  useEffect(() => {
-    // Reset error flag when gameId changes
-    joinErrorShownRef.current = false;
-    
-    // Handle join errors (duplicate username) - ensure single listener
-    const handleJoinError = (error) => {
-      console.log('Join error received:', error);
-      if (error.type === 'DUPLICATE_USERNAME' && !joinErrorShownRef.current) {
-        joinErrorShownRef.current = true; // Prevent duplicate toasts
-        toast.error(error.message);
-        // Clear username from localStorage and redirect back to join page
-        localStorage.removeItem('username');
-        navigate(`/game/${gameId}/join`);
-      }
-    };
-
-    // Remove any existing listeners first to prevent duplicates
-    socket.off('joinError');
-    
     socket.on('updateGameState', (state) => {
       setGameState(state);
     });
@@ -91,14 +50,27 @@ export default function GamePage() {
       setVote(null);
     });
 
-    socket.on('joinError', handleJoinError);
+    return () => {
+      socket.off('updateGameState');
+      socket.off('gameRestarted');
+    };
+  }, [gameId, username, navigate]);
+
+  // Separate useEffect for setting up socket listeners
+  useEffect(() => {
+    socket.on('updateGameState', (state) => {
+      setGameState(state);
+    });
+
+    socket.on('gameRestarted', () => {
+      setVote(null);
+    });
 
     return () => {
       socket.off('updateGameState');
       socket.off('gameRestarted');
-      socket.off('joinError', handleJoinError);
     };
-  }, [gameId, navigate]);
+  }, []);
 
   const handleCopyLink = () => {
     const link = `${window.location.origin}/game/${gameId}`;
@@ -119,12 +91,14 @@ export default function GamePage() {
   const handleRestart = () => {
     socket.emit('restartGame', { gameId });
     setVote(null);
+    setCurrentTopic("");
     setTopicInput("");
   };
 
   const handleStartGame = () => {
-    socket.emit('startGame', { gameId, username, topic: topicInput });
+    setCurrentTopic(topicInput);
     setTopicInput("");
+    socket.emit('startGame', { gameId, username });
   };
 
   const allVoted = gameState.players.length > 0 && gameState.players.every((p) => p.hasVoted);
@@ -243,12 +217,12 @@ export default function GamePage() {
             </h2>
 
             {/* Topic Display */}
-            {gameState.currentTopic && (
+            {currentTopic && (
               <div className="topic-display">
                 <h3
                   className="modeChange topic-title"
                 >
-                  Topic: {gameState.currentTopic}
+                  Topic: {currentTopic}
                 </h3>
               </div>
             )}
