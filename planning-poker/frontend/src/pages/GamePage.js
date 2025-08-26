@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { io } from 'socket.io-client';
+import socket from '../socket';
 import Navbar from '../components/Navbar';
 import VotingCards from '../components/VotingCards';
 import UsersList from '../components/UsersList';
 import { toast } from "react-toastify";
 import './GamePage.css';
-
-const socket = io('http://localhost:4000');
 
 export default function GamePage() {
   const { gameId } = useParams();
@@ -16,11 +14,11 @@ export default function GamePage() {
     players: [],
     creator: null,
     started: false,
-    revealed: false
+    revealed: false,
+    currentTopic: null
   });
   const [vote, setVote] = useState(null);
   const [roomConfig, setRoomConfig] = useState(null);
-  const [currentTopic, setCurrentTopic] = useState("");
   const [topicInput, setTopicInput] = useState("");
 
   // Default fibonacci series, will be overridden by room config if available
@@ -40,6 +38,7 @@ export default function GamePage() {
       setRoomConfig(config);
     }
 
+    // Always emit joinGame - backend will handle duplicates intelligently
     socket.emit('joinGame', { gameId, username });
 
     socket.on('updateGameState', (state) => {
@@ -55,22 +54,6 @@ export default function GamePage() {
       socket.off('gameRestarted');
     };
   }, [gameId, username, navigate]);
-
-  // Separate useEffect for setting up socket listeners
-  useEffect(() => {
-    socket.on('updateGameState', (state) => {
-      setGameState(state);
-    });
-
-    socket.on('gameRestarted', () => {
-      setVote(null);
-    });
-
-    return () => {
-      socket.off('updateGameState');
-      socket.off('gameRestarted');
-    };
-  }, []);
 
   const handleCopyLink = () => {
     const link = `${window.location.origin}/game/${gameId}`;
@@ -91,14 +74,13 @@ export default function GamePage() {
   const handleRestart = () => {
     socket.emit('restartGame', { gameId });
     setVote(null);
-    setCurrentTopic("");
     setTopicInput("");
   };
 
   const handleStartGame = () => {
-    setCurrentTopic(topicInput);
+    // Send the topic to the backend instead of setting it locally
+    socket.emit('startGame', { gameId, username, topic: topicInput });
     setTopicInput("");
-    socket.emit('startGame', { gameId, username });
   };
 
   const allVoted = gameState.players.length > 0 && gameState.players.every((p) => p.hasVoted);
@@ -217,12 +199,12 @@ export default function GamePage() {
             </h2>
 
             {/* Topic Display */}
-            {currentTopic && (
+            {gameState.currentTopic && (
               <div className="topic-display">
                 <h3
                   className="modeChange topic-title"
                 >
-                  Topic: {currentTopic}
+                  Topic: {gameState.currentTopic}
                 </h3>
               </div>
             )}
