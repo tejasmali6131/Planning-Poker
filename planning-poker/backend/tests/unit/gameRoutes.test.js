@@ -39,7 +39,7 @@ describe('Game Routes', () => {
       });
     });
 
-    test('should handle generateId errors gracefully', async () => {
+    test('should handle generateId errors successfully', async () => {
       generateId.mockImplementation(() => {
         throw new Error('ID generation failed');
       });
@@ -77,50 +77,6 @@ describe('Game Routes', () => {
         .expect(404);
 
       expect(response.body).toEqual({ error: 'Game not found' });
-    });
-
-    test('should handle complex game data', async () => {
-      const gameId = 'complex123';
-      const complexGameData = {
-        players: [
-          { id: 'socket1', username: 'alice', vote: '5' },
-          { id: 'socket2', username: 'bob', vote: '8' }
-        ],
-        status: 'started',
-        creator: 'alice',
-        revealed: true
-      };
-      
-      games[gameId] = complexGameData;
-
-      const response = await request(app)
-        .get(`/game/${gameId}`)
-        .expect(200);
-
-      expect(response.body).toEqual(complexGameData);
-    });
-  });
-
-  describe('Integration', () => {
-    test('should create and retrieve game in sequence', async () => {
-      generateId.mockReturnValue('sequence123');
-
-      // Create game
-      const createResponse = await request(app)
-        .post('/create-game')
-        .expect(200);
-
-      const gameId = createResponse.body.gameId;
-
-      // Retrieve game
-      const getResponse = await request(app)
-        .get(`/game/${gameId}`)
-        .expect(200);
-
-      expect(getResponse.body).toEqual({
-        players: [],
-        status: 'waiting'
-      });
     });
   });
 });

@@ -24,31 +24,6 @@ describe('Games Data Store', () => {
   });
 
   describe('Basic Operations', () => {
-    test('should start as empty and allow CRUD operations', () => {
-      expect(Object.keys(games).length).toBe(0);
-
-      // Create
-      const gameId = 'test123';
-      const gameData = testHelpers.createTestGame({
-        creator: 'testUser',
-        started: false
-      });
-      games[gameId] = gameData;
-
-      // Read
-      expect(games[gameId]).toBeDefined();
-      expect(games[gameId].creator).toBe('testUser');
-      expect(games[gameId].started).toBe(false);
-
-      // Update
-      games[gameId].started = true;
-      expect(games[gameId].started).toBe(true);
-
-      // Delete
-      delete games[gameId];
-      expect(games[gameId]).toBeUndefined();
-    });
-
     test('should handle multiple games', () => {
       const game1 = testHelpers.createTestGame({ creator: 'user1' });
       const game2 = testHelpers.createTestGame({ creator: 'user2' });

@@ -105,6 +105,40 @@ describe('Socket Setup', () => {
       expect(games[gameId].players[1].username).toBe('alice');
     });
 
+    test('should handle same socket rejoining with same username (idempotent)', () => {
+      const gameId = 'idempotentTest';
+      games[gameId] = {
+        players: [{ id: 'socket123', username: 'alice', vote: null }],
+        started: false,
+        creator: 'alice',
+        revealed: false,
+        currentTopic: null
+      };
+
+      joinGameHandler({ gameId, username: 'alice' });
+      
+      expect(games[gameId].players).toHaveLength(1);
+      expect(mockSocket.emit).toHaveBeenCalledWith('joinSuccess', { gameId, username: 'alice' });
+      expect(mockIo.to).toHaveBeenCalledWith(gameId);
+    });
+
+    test('should update username for same socket with different username', () => {
+      const gameId = 'updateTest';
+      games[gameId] = {
+        players: [{ id: 'socket123', username: 'oldname', vote: null }],
+        started: false,
+        creator: 'oldname',
+        revealed: false,
+        currentTopic: null
+      };
+
+      joinGameHandler({ gameId, username: 'newname' });
+      
+      expect(games[gameId].players).toHaveLength(1);
+      expect(games[gameId].players[0].username).toBe('newname');
+      expect(mockSocket.emit).toHaveBeenCalledWith('joinSuccess', { gameId, username: 'newname' });
+    });
+
     test('should not add duplicate username', () => {
       const gameId = 'duplicateTest';
       games[gameId] = {

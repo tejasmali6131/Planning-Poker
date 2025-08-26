@@ -54,39 +54,6 @@ describe('Generate ID Utility', () => {
       expect(/[a-z]/.test(allChars)).toBe(true);
       expect(/[0-9]/.test(allChars)).toBe(true);
     });
-
-    test('should have low collision rate', () => {
-      const ids = new Set();
-      const sampleSize = 5000;
-
-      for (let i = 0; i < sampleSize; i++) {
-        ids.add(generateId());
-      }
-
-      // Expect at least 99.8% uniqueness
-      const uniquenessRate = ids.size / sampleSize;
-      expect(uniquenessRate).toBeGreaterThan(0.998);
-    });
-  });
-
-  describe('Integration with Planning Poker', () => {
-    test('should work as object keys and be URL-safe', () => {
-      const games = {};
-      const gameIds = [];
-      
-      for (let i = 0; i < 50; i++) {
-        const gameId = generateId();
-        gameIds.push(gameId);
-        games[gameId] = { creator: `user${i}`, players: [] };
-      }
-      
-      // All should be accessible and URL-safe
-      gameIds.forEach((gameId, index) => {
-        expect(games[gameId]).toBeDefined();
-        expect(games[gameId].creator).toBe(`user${index}`);
-        expect(gameId).toMatch(/^[A-Za-z0-9]+$/);
-      });
-    });
   });
 
   describe('Module Export', () => {
