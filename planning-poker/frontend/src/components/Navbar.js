@@ -2,8 +2,6 @@ import koneLogo from '../images/koneLogo.png';
 import './Navbar.css'
 import DarkModeBtn from './DarkModeBtn';
 
-
-
 export default function Navbar() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>

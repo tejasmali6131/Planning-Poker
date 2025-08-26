@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { useParams, useNavigate } from "react-router-dom";
-import socket from "../socket";
 import { toast } from "react-toastify";
 import './JoinGame.css';
 
@@ -19,10 +18,8 @@ export default function JoinGame() {
     // Save username to localStorage
     localStorage.setItem("username", joiningUsername);
 
+    // Navigate to game page (GamePage will handle join error if any)
     navigate(`/game/${gameId}`);
-    
-    // Emit join game event
-    socket.emit('joinGame', { gameId, username: joiningUsername });
   };
 
   return (
