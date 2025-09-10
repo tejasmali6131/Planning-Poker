@@ -1,0 +1,32 @@
+{
+  "collectCoverageFrom": [
+    "src/App.js",
+    "src/components/DarkModeBtn.js",
+    "src/components/Navbar.js",
+    "src/components/UsersList.js",
+    "src/components/VotingCards.js",
+    "src/pages/LandingPage.js",
+    "src/pages/CreateRoom.js",
+    "src/pages/GamePage.js",
+    "src/pages/JoinGame.js",
+    "src/contexts/DarkModeContext.js"
+  ],
+  "coverageThreshold": {
+    "global": {
+      "branches": 70,
+      "functions": 70,
+      "lines": 70,
+      "statements": 70
+    }
+  },
+  "coverageReporters": [
+    "text",
+    "lcov",
+    "html"
+  ],
+  "testMatch": [
+    "<rootDir>/src/**/__tests__/**/*.{js,jsx}",
+    "<rootDir>/src/**/*.{test,spec}.{js,jsx}",
+    "<rootDir>/src/tests/**/*.{test,spec}.{js,jsx}"
+  ]
+}

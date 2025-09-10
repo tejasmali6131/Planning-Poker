@@ -1,0 +1,73 @@
+/* VotingCards.css */
+.voting-cards-container {
+    padding: 20px;
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-primary);
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.voting-cards-title {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: var(--text-accent);
+    text-align: center;
+}
+
+.cards-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.voting-card {
+    width: 60px;
+    height: 80px;
+    border-radius: 8px;
+    border: 2px solid var(--border-primary);
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px var(--shadow-medium);
+    transform: scale(1);
+    opacity: 1;
+}
+
+.voting-card.selected {
+    border: 3px solid var(--border-secondary);
+    background-color: var(--bg-tertiary);
+    color: var(--text-accent);
+    box-shadow: 0 4px 12px var(--shadow-light);
+    transform: scale(1.05);
+}
+
+.voting-card.disabled {
+    background-color: var(--bg-secondary);
+    color: var(--text-tertiary);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.voting-card.clickable:hover:not(.selected) {
+    background-color: var(--bg-secondary);
+    border-color: var(--text-link);
+    transform: scale(1.02);
+}
+
+.voting-status-message {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}

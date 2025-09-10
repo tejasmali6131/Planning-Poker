@@ -1,0 +1,92 @@
+/* Global Dark Mode CSS Variables */
+:root {
+    /* KONE Brand Colors - Light Mode */
+    --primary-blue: #004798;
+    --secondary-blue: #0068df;
+    --light-blue: #51b1ff;
+    --accent-yellow: #eaff00;
+
+    /* Light Mode Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #f0f8ff;
+    --bg-card: #ffffff;
+
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --text-tertiary: #999999;
+    --text-accent: var(--primary-blue);
+    --text-link: var(--secondary-blue);
+
+    --border-primary: #e0e0e0;
+    --border-secondary: var(--secondary-blue);
+    --border-focus: var(--primary-blue);
+
+    --shadow-light: rgba(0, 104, 223, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.1);
+    --shadow-strong: rgba(0, 0, 0, 0.2);
+}
+
+/* Dark Mode Colors */
+.dark-mode {
+    /* Dark Mode - KONE Dark Blue Theme */
+    --bg-primary: #0b0b1a;
+    --bg-secondary: #1a1a2e;
+    --bg-tertiary: #16213e;
+    --bg-card: #1a1a2e;
+
+    --text-primary: #ffffff;
+    --text-secondary: #b8c4d9;
+    --text-tertiary: #8a96a8;
+    --text-accent: #51b1ff;
+    --text-link: #51b1ff;
+
+    --border-primary: #2d3748;
+    --border-secondary: #4a5568;
+    --border-focus: #51b1ff;
+
+    --shadow-light: rgba(0, 0, 0, 0.3);
+    --shadow-medium: rgba(0, 0, 0, 0.4);
+    --shadow-strong: rgba(0, 0, 0, 0.6);
+}
+
+/* Global Body Styles */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure all text inherits the theme colors */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Toast container dark mode support */
+.dark-mode .Toastify__toast-container {
+    --toastify-color-light: var(--bg-card);
+    --toastify-color-dark: var(--bg-card);
+    --toastify-text-color-light: var(--text-primary);
+    --toastify-text-color-dark: var(--text-primary);
+}
+
+.dark-mode .Toastify__toast {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-primary);
+}
+
+.dark-mode .Toastify__toast--error {
+    background-color: #2d1b1b;
+    color: #ff6b6b;
+}
+
+.dark-mode .Toastify__toast--success {
+    background-color: #1b2d1b;
+    color: #51cf66;
+}
+
+.dark-mode .Toastify__toast--warning {
+    background-color: #2d2a1b;
+    color: #ffd43b;
+}

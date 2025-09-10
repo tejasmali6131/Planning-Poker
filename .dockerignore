@@ -1,0 +1,75 @@
+# Git
+.git
+.gitignore
+
+# Node.js
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage
+.nyc_output
+
+# Development
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Documentation
+README.md
+SETUP_COMPLETE.md
+
+# Development files
+start.bat
+start.ps1
+
+# Individual Dockerfiles (if you decide to remove them)
+backend/Dockerfile
+frontend/Dockerfile
+
+# Frontend development
+frontend/node_modules
+frontend/build/.gitkeep
+
+# Backend development  
+backend/node_modules
+backend/coverage
+
+# Test files
+**/*.test.js
+**/*.spec.js
+**/tests
+backend/TESTING_COMPLETE.md
+
+# Large files and build artifacts
+*.tar
+*.tar.gz
+**/.cache
+**/dist
+**/build
+!frontend/build

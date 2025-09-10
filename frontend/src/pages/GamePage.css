@@ -1,0 +1,384 @@
+/* GamePage.css */
+
+/* Main container */
+.game-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-primary);
+}
+
+.game-page-navbar {
+  border-bottom: 1px solid var(--border-secondary);
+  background-color: var(--bg-primary);
+}
+
+/* Room Header */
+.room-header {
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.room-title {
+  color: var(--text-accent);
+  font-size: 24px;
+  margin: 0 0 5px 0;
+}
+
+.room-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.room-info-item {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.room-id {
+  color: var(--text-link);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.copy-link-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: var(--text-link);
+  background-color: transparent;
+  border: 2px solid var(--border-secondary);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.copy-link-btn:hover {
+  background-color: var(--secondary-blue);
+  color: white;
+  border-color: var(--secondary-blue);
+}
+
+.start-game-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: white;
+  background-color: #28a745;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reveal-cards-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #000;
+  background-color: #ffc107;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.new-round-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: white;
+  background-color: var(--secondary-blue);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.new-round-btn:hover {
+  background-color: var(--primary-blue);
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+  /* Important for flex children to respect overflow */
+}
+
+/* Game Area */
+.game-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* Important for flex children to respect overflow */
+}
+
+.game-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* Changed from center to flex-start */
+  align-items: center;
+  padding: 20px;
+  /* Reduced padding */
+  background-color: var(--bg-secondary);
+  position: relative;
+  overflow-y: auto;
+  /* Allow vertical scrolling */
+  min-height: 0;
+  /* Important for flex children to respect overflow */
+}
+
+.game-state-title {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  color: var(--text-accent);
+  text-align: center;
+}
+
+/* Topic Display */
+.topic-display {
+  margin-bottom: 20px;
+  padding: 12px 20px;
+  background-color: var(--bg-tertiary);
+  border: 2px solid var(--border-secondary);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.topic-title {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
+/* Waiting State */
+.waiting-content {
+  text-align: center;
+  margin-top: auto;
+  /* Push content to center when there's space */
+  margin-bottom: auto;
+}
+
+.waiting-text {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.topic-input-container {
+  margin-bottom: 20px;
+}
+
+.topic-input {
+  width: 300px;
+  padding: 12px;
+  border: 2px solid var(--border-secondary);
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+  text-align: center;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.topic-input:focus {
+  border-color: var(--border-focus);
+}
+
+.creator-only-text {
+  font-size: 14px;
+  color: var(--text-tertiary);
+}
+
+/* Voting State */
+.voting-content {
+  text-align: center;
+  margin-top: auto;
+  /* Push content to center when there's space */
+  margin-bottom: auto;
+}
+
+.voting-status {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.user-vote {
+  font-size: 14px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Revealed State */
+.revealed-content {
+  text-align: center;
+  width: 100%;
+}
+
+.revealed-title {
+  color: #28a745;
+  margin-bottom: 20px;
+  /* Reduced margin */
+}
+
+.votes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  max-width: 100%;
+  /* Changed from 600px to 100% */
+  margin: 20px auto;
+  padding: 0 10px;
+  /* Add horizontal padding */
+}
+
+.player-vote-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  min-width: 120px;
+  box-shadow: 0 2px 8px var(--shadow-medium);
+}
+
+.player-vote-card.current-user {
+  background-color: var(--bg-tertiary);
+  border: 2px solid var(--border-secondary);
+}
+
+.player-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--light-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.player-avatar.current-user {
+  background-color: var(--secondary-blue);
+}
+
+.player-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.player-name.current-user {
+  font-weight: 600;
+  color: var(--text-accent);
+}
+
+.you-indicator {
+  color: var(--text-link);
+}
+
+.vote-display {
+  padding: 8px 12px;
+  background-color: var(--secondary-blue);
+  color: white;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Average Result */
+.average-result {
+  margin-top: 30px;
+  padding: 15px 25px;
+  background-color: var(--bg-tertiary);
+  border: 2px solid var(--border-secondary);
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.average-title {
+  color: var(--text-accent);
+  margin: 0;
+}
+
+/* Users List */
+.users-list {
+  width: 300px;
+  border-left: 1px solid var(--border-primary);
+  background-color: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* Important for flex children to respect overflow */
+}
+
+/* UsersList component specific styles */
+.users-list-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.users-list-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-primary);
+  background-color: var(--bg-card);
+  flex-shrink: 0;
+  /* Prevent header from shrinking */
+}
+
+.users-list-content {
+  flex: 1;
+  overflow-y: auto;
+  /* Allow scrolling for the participants list */
+  padding: 15px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+
+  .users-list {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--border-primary);
+    max-height: 300px;
+  }
+
+  .votes-grid {
+    gap: 10px;
+    padding: 0 5px;
+  }
+
+  .player-vote-card {
+    min-width: 100px;
+    padding: 10px;
+  }
+}
