@@ -1,3 +1,4 @@
+# Build frontend
 FROM node:18-alpine AS frontend-builder
 WORKDIR /frontend-build
 COPY frontend/package*.json ./
@@ -5,43 +6,44 @@ RUN npm ci --only=production --silent --no-audit --no-fund
 COPY frontend/ ./
 RUN npm run build
 
+# Install backend dependencies
 FROM node:18-alpine AS backend-deps
 WORKDIR /backend-build
 COPY backend/package*.json ./
 RUN npm ci --only=production --silent --no-audit --no-fund
 
+# Production image
 FROM node:18-alpine AS production
 
-# Install nginx and create necessary directories
-RUN apk add --no-cache nginx su-exec && \
-    mkdir -p /run/nginx /var/log/nginx /var/cache/nginx /var/lib/nginx/tmp/client_body /var/lib/nginx/tmp/proxy /var/lib/nginx/tmp/fastcgi /var/lib/nginx/tmp/uwsgi /var/lib/nginx/tmp/scgi && \
-    chmod 755 /run/nginx /var/log/nginx /var/cache/nginx /var/lib/nginx && \
-    chmod -R 755 /var/lib/nginx/tmp
+# Install wget for health checks
+RUN apk add --no-cache wget
 
-# Create nodejs user
+# Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
 WORKDIR /app
 
-COPY backend/ ./backend/
-COPY --from=backend-deps /backend-build/node_modules ./backend/node_modules
-COPY --from=frontend-builder /frontend-build/build ./frontend/build
+# Copy backend files and dependencies
+COPY --chown=nodejs:nodejs backend/ ./backend/
+COPY --from=backend-deps --chown=nodejs:nodejs /backend-build/node_modules ./backend/node_modules
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY start.sh /app/start.sh
-COPY start-rootless.sh /app/start-rootless.sh
+# Copy frontend build
+COPY --from=frontend-builder --chown=nodejs:nodejs /frontend-build/build ./frontend/build
 
-RUN chmod +x /app/start.sh /app/start-rootless.sh && \
-    chown -R nodejs:nodejs /app
+# Switch to non-root user
+USER nodejs
 
-# Create directories for rootless nginx
-RUN mkdir -p /tmp/nginx/logs /tmp/nginx/cache /tmp/nginx/run && \
-    chown -R nodejs:nodejs /tmp/nginx
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=4000
 
-EXPOSE 80 8080
+# Expose port
+EXPOSE 4000
 
+# Health check (use environment variable)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/ || exit 1
 
-CMD ["/app/start.sh"]
+# Start the Node.js server directly
+CMD ["node", "backend/server.js"]

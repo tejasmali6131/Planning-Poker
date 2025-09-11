@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { useParams, useNavigate } from "react-router-dom";
-import socket from "../socket";
 import { toast } from "react-toastify";
+import apiService from "../services/apiService";
 import './JoinGame.css';
 
 export default function JoinGame() {
@@ -12,21 +12,21 @@ export default function JoinGame() {
 
   useEffect(() => {
     // Listen for username exists error
-    socket.on('usernameExists', ({ message }) => {
+    apiService.onUsernameExists(({ message }) => {
       toast.error(message);
       // Clear the username input so user can enter a new one
       setJoiningUsername("");
     });
 
     // Listen for successful join
-    socket.on('joinSuccess', ({ gameId }) => {
+    apiService.onJoinSuccess(({ gameId }) => {
       // Successfully joined, navigate to the game page
       navigate(`/game/${gameId}`);
     });
 
     return () => {
-      socket.off('usernameExists');
-      socket.off('joinSuccess');
+      apiService.removeUsernameExistsListener();
+      apiService.removeJoinSuccessListener();
     };
   }, [navigate]);
 
@@ -36,11 +36,11 @@ export default function JoinGame() {
       return;
     }
     
-    // Save username to localStorage
-    localStorage.setItem("username", joiningUsername);
+    // Save username to localStorage using API service
+    apiService.saveUsername(joiningUsername);
 
     // Emit join game event - we'll navigate only if successful
-    socket.emit('joinGame', { gameId, username: joiningUsername });
+    apiService.joinGame(gameId, joiningUsername);
   };
 
   return (
