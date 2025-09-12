@@ -2,11 +2,11 @@ const games = require('./data/games');
 
 function setupSocket(io) {
   io.on('connection', (socket) => {
-    console.log(`🟢 New WebSocket connection: ${socket.id}`);
+    console.log(`New WebSocket connection: ${socket.id}`);
 
     // Join a game
     socket.on('joinGame', ({ gameId, username }) => {
-      console.log(`📥 Player joining: ${username} → ${gameId} (socket: ${socket.id})`);
+      console.log(`Player joining: ${username} → ${gameId} (socket: ${socket.id})`);
 
       // If game does not exist, create it
       if (!games[gameId]) {
@@ -17,7 +17,7 @@ function setupSocket(io) {
           revealed: false,
           currentTopic: null
         };
-        console.log(`🆕 New game created: ${gameId}`);
+        console.log(`New game created: ${gameId}`);
       }
 
       // Check if this socket is already in the game with the same username
@@ -25,13 +25,13 @@ function setupSocket(io) {
       if (existingPlayerBySocket) {
         if (existingPlayerBySocket.username === username) {
           // Same socket, same username - just send success again (idempotent)
-          console.log(`🔄 Player ${username} already joined, sending success again`);
+          console.log(`Player ${username} already joined, sending success again`);
           socket.emit('joinSuccess', { gameId, username });
           io.to(gameId).emit('updateGameState', games[gameId]);
           return;
         } else {
           // Same socket, different username - update the username
-          console.log(`🔄 Updating username for socket ${socket.id} from ${existingPlayerBySocket.username} to ${username}`);
+          console.log(`Updating username for socket ${socket.id} from ${existingPlayerBySocket.username} to ${username}`);
           existingPlayerBySocket.username = username;
           socket.emit('joinSuccess', { gameId, username });
           io.to(gameId).emit('updateGameState', games[gameId]);
@@ -43,14 +43,14 @@ function setupSocket(io) {
       const existingPlayerByName = games[gameId].players.find(p => p.username === username && p.id !== socket.id);
       if (existingPlayerByName) {
         // Username already exists with a different socket, emit error
-        console.log(`❌ Duplicate username: ${username} in ${gameId}`);
+        console.log(`Duplicate username: ${username} in ${gameId}`);
         socket.emit('usernameExists', { message: 'Username already exists!! Try a different one.' });
         return;
       }
 
       // Add the new player
       games[gameId].players.push({ id: socket.id, username, vote: null });
-      console.log(`✅ Player added: ${username} (${games[gameId].players.length} total)`);
+      console.log(`Player added: ${username} (${games[gameId].players.length} total)`);
 
       socket.join(gameId);
 
@@ -67,7 +67,7 @@ function setupSocket(io) {
         games[gameId].started = true;
         games[gameId].currentTopic = topic || null;
         io.to(gameId).emit('updateGameState', games[gameId]);
-        console.log(`🚀 Game started: ${gameId}${topic ? ` with topic: ${topic}` : ''}`);
+        console.log(`Game started: ${gameId}${topic ? ` with topic: ${topic}` : ''}`);
       }
     });
 
@@ -107,7 +107,7 @@ function setupSocket(io) {
 
         io.to(gameId).emit('updateGameState', games[gameId]);
         io.to(gameId).emit('gameRestarted');
-        console.log(`🔄 Game restarted: ${gameId}`);
+        console.log(`Game restarted: ${gameId}`);
       }
     });
 
@@ -117,7 +117,7 @@ function setupSocket(io) {
         const game = games[gameId];
         const index = game.players.findIndex(p => p.id === socket.id);
         if (index !== -1) {
-          console.log(`❌ Player disconnected: ${game.players[index].username}`);
+          console.log(`Player disconnected: ${game.players[index].username}`);
           game.players.splice(index, 1);
 
           io.to(gameId).emit('updateGameState', game);

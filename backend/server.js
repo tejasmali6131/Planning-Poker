@@ -44,7 +44,7 @@ setupSocket(io);
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📱 Frontend served at: http://localhost:${PORT}`);
-  console.log(`🔌 Backend API at: http://localhost:${PORT}/api`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Frontend served at: http://localhost:${PORT}`);
+  console.log(`Backend API at: http://localhost:${PORT}/api`);
 });

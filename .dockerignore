@@ -48,10 +48,6 @@ SETUP_COMPLETE.md
 start.bat
 start.ps1
 
-# Individual Dockerfiles (if you decide to remove them)
-backend/Dockerfile
-frontend/Dockerfile
-
 # Frontend development
 frontend/node_modules
 frontend/build/.gitkeep
