@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
 import Navbar from "../components/Navbar";
 import { toast } from "react-toastify";
+import apiService from "../services/apiService";
 
 
 export default function LandingPage() {
@@ -37,8 +38,8 @@ export default function LandingPage() {
       return;
     }
 
-    // Save username to localStorage
-    localStorage.setItem("username", username);
+    // Save username to localStorage using API service
+    apiService.saveUsername(username);
 
     navigate(`/create-room`);
   };

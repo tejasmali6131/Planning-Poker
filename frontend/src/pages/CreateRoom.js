@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import Navbar from "../components/Navbar";
+import apiService from "../services/apiService";
 import './CreateRoom.css';
 
 const DECK_TYPES = {
@@ -22,7 +23,7 @@ export default function CreateRoom() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const username = localStorage.getItem("username");
+        const username = apiService.getUsername();
         if (!username) {
             navigate("/");
             return;
@@ -39,16 +40,16 @@ export default function CreateRoom() {
 
         // Generate unique room ID using uuid for compatibility with existing backend
         const gameId = uuidv4().slice(0, 6);
-        const username = localStorage.getItem("username");
+        const username = apiService.getUsername();
 
-        // Store room configuration in localStorage for later use
-        localStorage.setItem(`room_${gameId}`, JSON.stringify({
+        // Store room configuration in localStorage for later use using API service
+        apiService.saveRoomConfig(gameId, {
             name: roomName,
             deckType: selectedDeck,
             cards: DECK_TYPES[selectedDeck].cards,
             createdBy: username,
             createdAt: new Date().toISOString()
-        }));
+        });
 
         // Navigate to the game room
         setTimeout(() => {

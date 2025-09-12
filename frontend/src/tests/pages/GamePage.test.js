@@ -256,6 +256,12 @@ describe('GamePage', () => {
         writeText: mockWriteTextLocal,
       },
     });
+    
+    // Ensure secure context so clipboard API is used
+    Object.defineProperty(window, 'isSecureContext', {
+      value: true,
+      writable: true,
+    });
 
     render(
       <TestWrapper>
@@ -278,6 +284,12 @@ describe('GamePage', () => {
       clipboard: {
         writeText: mockWriteTextError,
       },
+    });
+    
+    // Ensure secure context so clipboard API is used
+    Object.defineProperty(window, 'isSecureContext', {
+      value: true,
+      writable: true,
     });
 
     render(

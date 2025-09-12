@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import socket from '../socket';
 import Navbar from '../components/Navbar';
 import VotingCards from '../components/VotingCards';
 import UsersList from '../components/UsersList';
-import { toast } from "react-toastify";
+import apiService from '../services/apiService';
 import './GamePage.css';
 
 export default function GamePage() {
@@ -23,7 +22,7 @@ export default function GamePage() {
 
   // Default fibonacci series, will be overridden by room config if available
   const defaultCards = [0, 1, 2, 3, 5, 8, 13, 21, 34, "?"];
-  const username = localStorage.getItem('username');
+  const username = apiService.getUsername();
 
   useEffect(() => {
     if (!username) {
@@ -32,75 +31,50 @@ export default function GamePage() {
     }
 
     // Load room configuration if available
-    const savedConfig = localStorage.getItem(`room_${gameId}`);
-    if (savedConfig) {
-      const config = JSON.parse(savedConfig);
+    const config = apiService.loadRoomConfig(gameId);
+    if (config) {
       setRoomConfig(config);
     }
 
     // Always emit joinGame - backend will handle duplicates intelligently
-    socket.emit('joinGame', { gameId, username });
+    apiService.joinGame(gameId, username);
 
-    socket.on('updateGameState', (state) => {
+    apiService.onGameStateUpdate((state) => {
       setGameState(state);
     });
 
-    socket.on('gameRestarted', () => {
+    apiService.onGameRestarted(() => {
       setVote(null);
     });
 
     return () => {
-      socket.off('updateGameState');
-      socket.off('gameRestarted');
+      apiService.removeGameStateListener();
+      apiService.removeGameRestartListener();
     };
   }, [gameId, username, navigate]);
 
   const handleCopyLink = async () => {
-    const link = `${window.location.origin}/game/${gameId}`;
-    
-    try {
-      // Check if clipboard API is available
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(link);
-        toast.success("Game link copied!");
-      } else {
-        // Fallback for non-secure contexts
-        const textArea = document.createElement('textarea');
-        textArea.value = link;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        toast.success("Game link copied!");
-      }
-    } catch (error) {
-      console.error('Copy failed:', error);
-      toast.error(`Failed to copy link: ${error.message}`);
-      
-      // Show the link in a prompt as final fallback
-      prompt('Copy this link manually:', link);
-    }
+    await apiService.copyGameLink(gameId);
   };
 
   const handleVote = (num) => {
     setVote(num);
-    socket.emit('vote', { gameId, username, vote: num });
+    apiService.submitVote(gameId, username, num);
   };
 
   const handleReveal = () => {
-    socket.emit('reveal', { gameId });
+    apiService.revealVotes(gameId);
   };
 
   const handleRestart = () => {
-    socket.emit('restartGame', { gameId });
+    apiService.restartGame(gameId);
     setVote(null);
     setTopicInput("");
   };
 
   const handleStartGame = () => {
     // Send the topic to the backend instead of setting it locally
-    socket.emit('startGame', { gameId, username, topic: topicInput });
+    apiService.startGame(gameId, username, topicInput);
     setTopicInput("");
   };
 
@@ -118,21 +92,8 @@ export default function GamePage() {
     currentGameState = "revealed";
   }
 
-  // Calculate average for revealed state
-  const calculateAverage = () => {
-    if (!gameState.revealed || !gameState.players) return null;
-
-    const numericVotes = gameState.players
-      .filter(p => p.vote !== null && !isNaN(parseFloat(p.vote)) && isFinite(p.vote))
-      .map(p => parseFloat(p.vote));
-
-    if (numericVotes.length === 0) return null;
-
-    const average = numericVotes.reduce((sum, vote) => sum + vote, 0) / numericVotes.length;
-    return average.toFixed(1);
-  };
-
-  const averageResult = calculateAverage();
+  // Calculate average for revealed state using API service
+  const averageResult = gameState.revealed ? apiService.calculateVotingAverage(gameState.players) : null;
 
   return (
     <div className="game-page">
