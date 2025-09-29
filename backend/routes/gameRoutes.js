@@ -1,3 +1,14 @@
+/**
+ * Express router for Planning Poker REST API endpoints and game management.
+ * 
+ * 1. Problem: Need HTTP endpoints for game creation, health monitoring, and network
+ *    configuration to support Planning Poker sessions across different devices.
+ * 2. Solution: RESTful API routes that handle game lifecycle, health checks, and
+ *    cross-device sharing capabilities with tunnel URL management for remote access.
+ * 3. Implementation: Game creation/retrieval endpoints, health monitoring, network
+ *    info APIs for shareable links, and dynamic tunnel URL configuration support.
+ */
+
 const express = require('express');
 const generateId = require('../utils/generateId');
 const games = require('../data/games');

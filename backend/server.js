@@ -1,3 +1,14 @@
+/**
+ * Main server file that creates and configures the Planning Poker application backend.
+ * 
+ * 1. Problem: Need a unified server to handle both HTTP API requests and real-time 
+ *    WebSocket communication for Planning Poker sessions, while serving the frontend.
+ * 2. Solution: Express.js server with Socket.io integration that provides REST APIs
+ *    for game management and real-time bidirectional communication for live voting.
+ * 3. Implementation: HTTP server with CORS configuration, API routes, static file
+ *    serving for React frontend, Socket.io setup, and comprehensive error handling.
+ */
+
 require('dotenv').config();
 const express = require('express');
 const http = require('http');

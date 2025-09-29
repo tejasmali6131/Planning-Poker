@@ -1,3 +1,14 @@
+/**
+ * Socket.io configuration for real-time Planning Poker game communication.
+ * 
+ * 1. Problem: Need real-time bidirectional communication between players for live 
+ *    voting sessions, game state updates, and instant feedback during Planning Poker.
+ * 2. Solution: WebSocket-based event handling system that manages game lifecycle,
+ *    player connections, voting mechanics, and live game state synchronization.
+ * 3. Implementation: Event listeners for join/leave, voting, reveal, restart actions
+ *    with duplicate username prevention, vote hiding/revealing, and auto cleanup.
+ */
+
 const games = require('./data/games');
 
 function setupSocket(io) {
