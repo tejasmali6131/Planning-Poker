@@ -1,10 +1,16 @@
 # Build frontend
+
 FROM node:18-alpine AS frontend-builder
 WORKDIR /frontend-build
-COPY frontend/package*.json ./
-RUN npm ci --only=production --silent --no-audit --no-fund
-COPY frontend/ ./
-RUN npm run build
+COPY frontend/build ./build
+# OR, if you need to build from source:
+    
+# FROM node:18-alpine AS frontend-builder
+# WORKDIR /frontend-build
+# COPY frontend/package*.json ./
+# RUN npm ci --only=production --silent --no-audit --no-fund
+# COPY frontend/ ./
+# RUN npm run build
 
 # Install backend dependencies
 FROM node:18-alpine AS backend-deps
@@ -41,9 +47,9 @@ ENV PORT=4000
 # Expose port
 EXPOSE 4000
 
-# Health check (use environment variable)
+# Health check using the existing /api/health endpoint
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/ || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/api/health || exit 1
 
 # Start the Node.js server directly
 CMD ["node", "backend/server.js"]

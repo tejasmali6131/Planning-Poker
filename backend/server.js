@@ -10,8 +10,13 @@ const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost", "http://172.18.161.201"],
-    methods: ["GET", "POST"]
+    origin: [
+      "http://localhost:3000", 
+      "http://localhost:4000", 
+      "https://ngth2fs5-4000.asse.devtunnels.ms"
+    ],
+    methods: ["GET", "POST"],
+    credentials: false
   }
 });
 
@@ -43,8 +48,11 @@ app.get('*', (req, res) => {
 setupSocket(io);
 
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Frontend served at: http://localhost:${PORT}`);
-  console.log(`Backend API at: http://localhost:${PORT}/api`);
+const HOST = process.env.HOST || '0.0.0.0';
+
+server.listen(PORT, HOST, () => {
+  console.log(`🚀 Server running on ${HOST}:${PORT}`);
+  console.log(`📱 Local access: http://localhost:${PORT}`);
+  console.log(`🌐 Public access: https://ngth2fs5-4000.asse.devtunnels.ms`);
+  console.log(`🔌 Backend API: http://localhost:${PORT}/api`);
 });

@@ -138,12 +138,27 @@ class ApiService {
     }
   }
 
-  generateGameLink(gameId) {
+  async generateGameLink(gameId) {
+    try {
+      // Try to get network info from backend for shareable links
+      const response = await fetch(`${this.baseUrl}/api/network-info`);
+      if (response.ok) {
+        const networkInfo = await response.json();
+        // If we're accessing via localhost, use the shareable URL for copying
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          return `${networkInfo.shareableUrl}/game/${gameId}`;
+        }
+      }
+    } catch (error) {
+      console.log('Could not get network info, using current origin');
+    }
+    
+    // Fallback to current origin
     return `${window.location.origin}/game/${gameId}`;
   }
 
   async copyGameLink(gameId) {
-    const link = this.generateGameLink(gameId);
+    const link = await this.generateGameLink(gameId);
     
     try {
       if (navigator.clipboard && window.isSecureContext) {

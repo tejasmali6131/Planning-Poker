@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/darkMode.css";
 import { DarkModeProvider } from "./contexts/DarkModeContext";
@@ -9,6 +10,11 @@ import CreateRoom from "./pages/CreateRoom";
 import JoinGame from "./pages/JoinGame";
 
 function App() {
+  // Set the document title for all pages
+  useEffect(() => {
+    document.title = "KONE Planning Poker";
+  }, []);
+
   return (
     <DarkModeProvider>
       <Router>
