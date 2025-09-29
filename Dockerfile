@@ -1,10 +1,11 @@
-# Build frontend
+# Always build frontend before running docker build
 
 FROM node:18-alpine AS frontend-builder
 WORKDIR /frontend-build
 COPY frontend/build ./build
+
 # OR, if you need to build from source:
-    
+
 # FROM node:18-alpine AS frontend-builder
 # WORKDIR /frontend-build
 # COPY frontend/package*.json ./
