@@ -349,7 +349,7 @@ describe('GamePage', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Start Game')).toBeInTheDocument();
+      expect(screen.getByText('Start Session')).toBeInTheDocument();
     });
     
     expect(screen.getByPlaceholderText('Enter topic for this round (optional)')).toBeInTheDocument();
@@ -384,7 +384,7 @@ describe('GamePage', () => {
     const topicInput = screen.getByPlaceholderText('Enter topic for this round (optional)');
     fireEvent.change(topicInput, { target: { value: 'Test Topic' } });
 
-    const startButton = screen.getByText('Start Game');
+    const startButton = screen.getByText('Start Session');
     
     // Clear previous socket calls
     socket.emit.mockClear();

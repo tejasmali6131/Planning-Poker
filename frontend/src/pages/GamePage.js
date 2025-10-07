@@ -140,7 +140,7 @@ export default function GamePage() {
                   onClick={handleStartGame}
                   className="start-game-btn"
                 >
-                  Start Game
+                  Start Session
                 </button>
               )}
 
