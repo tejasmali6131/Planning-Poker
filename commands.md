@@ -1,6 +1,9 @@
 # Run the docker image: 
     docker build -t planning-poker .
 
+## Run if already built
+    docker run -d --name planning-poker-app -p 4000:4000 --restart unless-stopped planning-poker
+    
 ## Check if it's running
     docker ps
 
@@ -16,8 +19,6 @@
 ## Clean up
     docker system prune -f
 
-## Run if already built
-    docker run -d --name planning-poker-app -p 4000:4000 --restart unless-stopped planning-poker
 
 
 

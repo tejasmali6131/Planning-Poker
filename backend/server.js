@@ -16,6 +16,7 @@ const cors = require('cors');
 const path = require('path');
 const setupSocket = require('./socket');
 const gameRoutes = require('./routes/gameRoutes');
+const productionUtils = require('./utils/productionUtils');
 
 const app = express();
 const server = http.createServer(app);
@@ -24,6 +25,7 @@ const io = require('socket.io')(server, {
     origin: [
       "http://localhost:3000", 
       "http://localhost:4000", 
+      "http://172.17.0.2:4000", 
       "https://ngth2fs5-4000.asse.devtunnels.ms"
     ],
     methods: ["GET", "POST"],
@@ -58,12 +60,17 @@ app.get('*', (req, res) => {
 
 setupSocket(io);
 
+// Start production monitoring and cleanup
+productionUtils.startMonitoring();
+productionUtils.setupGracefulShutdown(server);
+
 const PORT = process.env.PORT || 4000;
 const HOST = process.env.HOST || '0.0.0.0';
 
 server.listen(PORT, HOST, () => {
-  console.log(`🚀 Server running on ${HOST}:${PORT}`);
-  console.log(`📱 Local access: http://localhost:${PORT}`);
-  console.log(`🌐 Public access: https://ngth2fs5-4000.asse.devtunnels.ms`);
-  console.log(`🔌 Backend API: http://localhost:${PORT}/api`);
+  console.log(`Server running on ${HOST}:${PORT}`);
+  console.log(`Local access: http://localhost:${PORT}`);
+  console.log(`Public access: https://ngth2fs5-4000.asse.devtunnels.ms`);
+  console.log(`Backend API: http://localhost:${PORT}/api`);
+  console.log(`Production-ready Planning Poker server with auto-cleanup`);
 });

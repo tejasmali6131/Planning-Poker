@@ -19,16 +19,9 @@ function setupSocket(io) {
     socket.on('joinGame', ({ gameId, username }) => {
       console.log(`Player joining: ${username} → ${gameId} (socket: ${socket.id})`);
 
-      // If game does not exist, create it
+      // Create game if it doesn't exist
       if (!games[gameId]) {
-        games[gameId] = { 
-          players: [], 
-          started: false, 
-          creator: username, 
-          revealed: false,
-          currentTopic: null
-        };
-        console.log(`New game created: ${gameId}`);
+        games.createGame(gameId, username);
       }
 
       // Check if this socket is already in the game with the same username
@@ -128,10 +121,23 @@ function setupSocket(io) {
         const game = games[gameId];
         const index = game.players.findIndex(p => p.id === socket.id);
         if (index !== -1) {
-          console.log(`Player disconnected: ${game.players[index].username}`);
+          const username = game.players[index].username;
+          console.log(`Player disconnected: ${username} from game ${gameId}`);
           game.players.splice(index, 1);
 
-          io.to(gameId).emit('updateGameState', game);
+          // If game becomes empty, remove it after a short delay
+          if (game.players.length === 0) {
+            console.log(`Game ${gameId} is now empty, scheduling for cleanup...`);
+            setTimeout(() => {
+              // Double-check if still empty before removing
+              if (games[gameId] && games[gameId].players.length === 0) {
+                games.removeGame(gameId);
+              }
+            }, 30000); // 30 second delay to allow reconnections
+          } else {
+            // Update remaining players
+            io.to(gameId).emit('updateGameState', game);
+          }
         }
       }
     });

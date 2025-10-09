@@ -1,17 +1,15 @@
-# Always build frontend before running docker build
-
+# Build frontend from source
 FROM node:18-alpine AS frontend-builder
 WORKDIR /frontend-build
-COPY frontend/build ./build
 
-# OR, if you need to build from source:
+# Copy package files first for better layer caching
+COPY frontend/package*.json ./
+RUN npm ci --silent --no-audit --no-fund
 
-# FROM node:18-alpine AS frontend-builder
-# WORKDIR /frontend-build
-# COPY frontend/package*.json ./
-# RUN npm ci --only=production --silent --no-audit --no-fund
-# COPY frontend/ ./
-# RUN npm run build
+# Copy only necessary files for building (exclude node_modules, build, coverage, etc.)
+COPY frontend/public ./public
+COPY frontend/src ./src
+RUN npx react-scripts build
 
 # Install backend dependencies
 FROM node:18-alpine AS backend-deps
