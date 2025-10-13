@@ -1,135 +1,133 @@
-# Planning Poker Pro
+# KONE Planning Poker
 
-A full-stack Planning Poker application built with React (frontend) and Node.js/Express (backend).
+A real-time collaborative Planning Poker application for Agile teams to estimate story points effectively. Built with React.js frontend and Node.js backend with Socket.io for real-time communication.
+
+## Features
+
+- **Real-time Collaboration**: Multiple players can join and vote simultaneously
+- **Cross-device Support**: Works seamlessly across desktop and mobile devices
+- **Shareable Game Links**: Generate shareable links for remote team participation
+- **Health Monitoring**: Built-in health checks and monitoring endpoints
+- **Dockerized Deployment**: Easy deployment with Docker containers
+
+## Prerequisites
+
+- Node.js 18+ 
+- npm
+- Docker (for containerized deployment)
 
 ## Quick Start
 
-To run both backend and frontend together with a single command:
+### Development Mode
+
+1. **Clone and install dependencies**
+   ```bash
+   git clone https://gitlab.com/konecorporation/rnd-internal/scrum-tools/kone-planning-poker
+   cd planning-poker
+   npm run install:all
+   ```
+
+2. **Start development servers**
+   ```bash
+   # Start both frontend and backend concurrently
+   npm run start:dev
+   ```
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:4000
+
+### Production Mode
+
+1. **Build and start**
+   ```bash
+   # Build frontend and start backend
+   npm start
+   ```
+   - Application: http://localhost:4000
+
+## Docker Deployment
+
+### Quick Docker Commands
 
 ```bash
-npm start
-```
-
-This will start:
-- Backend server on `http://localhost:4000`
-- Frontend development server on `http://localhost:3000`
-
-## Installation
-
-### Option 1: Install all dependencies at once
-```bash
-npm run install:all
-```
-
-### Option 2: Install manually
-```bash
-# Install root dependencies
-npm install
-
-# Install backend dependencies
-cd backend && npm install
-
-# Install frontend dependencies
-cd frontend && npm install
-```
-
-## Available Scripts
-
-In the project root directory, you can run:
-
-### `npm start`
-
-Runs both the backend and frontend servers concurrently:
-- Backend (Node.js/Express) on `http://localhost:4000`
-- Frontend (React) on `http://localhost:3000`
-
-### `npm run start:backend`
-
-Runs only the backend server in development mode with nodemon for auto-restart.
-
-### `npm run start:frontend`
-
-Runs only the frontend React app in development mode.
-
-### `npm run build`
-
-Builds the frontend app for production to the `build` folder.
-
-### `npm test`
-
-Runs tests for both backend and frontend concurrently.
-
-### `npm run test:coverage`
-
-Runs test coverage reports for both backend and frontend.
-
-### `npm run install:all`
-
-Installs dependencies for root, backend, and frontend projects.
-
-### `npm run clean`
-
-Removes all node_modules folders from root, backend, and frontend.
-
-## Docker Support
-
-You can also run the application using Docker:
-
-```bash
-# Start with Docker Compose
-npm run docker:up
-
-# Stop Docker containers
-npm run docker:down
-
-# Build Docker images
+# Build Docker image
 npm run docker:build
+
+# Run container (detached mode with auto-restart)
+npm run docker:run
+
+# View logs
+npm run docker:logs
+
+# Stop container
+npm run docker:stop
+
+# Remove container
+npm run docker:remove
+
+# Clean up Docker resources
+npm run docker:clean
 ```
 
-## Development
+### Manual Docker Commands
 
-### Backend Development
-The backend is built with:
-- Node.js & Express
-- Socket.io for real-time communication
-- Jest for testing
+```bash
+# Build image
+docker build -t planning-poker .
 
-### Frontend Development
-The frontend is built with:
-- React
-- Socket.io-client for real-time communication
-- React Testing Library & Jest for testing
+# Run container
+docker run -d \
+  --name planning-poker-app \
+  -p 4000:4000 \
+  --restart unless-stopped \
+  planning-poker
 
-## Learn More
+# View running containers
+docker ps
 
-### React Documentation
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# Stop and remove
+docker stop planning-poker-app
+docker rm planning-poker-app
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Testing
 
-### Node.js & Express
-- [Node.js Documentation](https://nodejs.org/en/docs/)
-- [Express.js Documentation](https://expressjs.com/)
+```bash
+# Run all tests
+npm test
 
-### Socket.io
-- [Socket.io Documentation](https://socket.io/docs/)
+# Run tests with coverage
+npm run test:coverage
 
-### Analyzing the Bundle Size
+# Backend tests only
+npm run test:backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# Frontend tests only
+npm run test:frontend
+```
 
-### Making a Progressive Web App
+## API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- `GET /api/health` - Health check endpoint
+- `GET /api/network-info` - Get network and tunnel information
+- `POST /api/create-game` - Create a new game session
+- `GET /api/game/:gameId` - Get game information
+- `POST /api/update-tunnel` - Update tunnel URL for cross-device access
 
-### Advanced Configuration
+## Deployment Tips
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+1. **Environment Variables**:
+   - `PORT` - Server port (default: 4000)
+   - `NODE_ENV` - Environment mode (production/development)
+   - `DEV_TUNNEL_URL` - VS Code dev tunnel URL for cross-device access
 
-### Deployment
+2. **Cross-device Access**:
+   - Use VS Code dev tunnels or ngrok for external access
+   - Update tunnel URL via `/api/update-tunnel` endpoint
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+3. **Production Considerations**:
+   - Application runs as non-root user in Docker for security
+   - Health checks configured for container orchestration
+   - Static frontend files served by Express server
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Happy Planning!**

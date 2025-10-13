@@ -79,6 +79,10 @@
   transition: background-color 0.3s;
 }
 
+.start-game-btn:hover {
+  background-color: #1e7e34; /* darker green */
+}
+
 .reveal-cards-btn {
   padding: 8px 16px;
   font-size: 14px;
@@ -88,6 +92,10 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+
+.reveal-cards-btn:hover {
+  background-color: #b38600; /* darker yellow */
 }
 
 .new-round-btn {
