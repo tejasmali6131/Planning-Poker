@@ -139,8 +139,14 @@ class ApiService {
   }
 
   async generateGameLink(gameId) {
+    // For production deployments, always use the current window location
+    // This ensures the copied link matches the actual deployed URL
+    if (process.env.NODE_ENV === 'production') {
+      return `${window.location.origin}/game/${gameId}`;
+    }
+    
+    // Development mode: Try to get shareable URL for cross-device testing
     try {
-      // Try to get network info from backend for shareable links
       const response = await fetch(`${this.baseUrl}/api/network-info`);
       if (response.ok) {
         const networkInfo = await response.json();

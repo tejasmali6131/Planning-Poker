@@ -32,21 +32,45 @@ router.get('/health', (req, res) => {
 
 // Get network info for generating shareable links
 router.get('/network-info', (req, res) => {
-  // Use VS Code Dev Tunnel URL for cross-device sharing
-  let devTunnelUrl = process.env.DEV_TUNNEL_URL || 'https://ngth2fs5-4000.asse.devtunnels.ms';
+  const port = process.env.PORT || 4000;
+  let shareableUrl;
   
-  // Allow override via query parameter for testing
-  if (req.query.tunnelUrl) {
-    devTunnelUrl = req.query.tunnelUrl;
+  // Production deployment (Render, Railway, etc.)
+  if (process.env.NODE_ENV === 'production') {
+    // Use Render's external URL if available
+    if (process.env.RENDER_EXTERNAL_URL) {
+      shareableUrl = process.env.RENDER_EXTERNAL_URL;
+    }
+    // Use Railway's public URL if available
+    else if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+      shareableUrl = `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
+    }
+    // Generic production URL from request headers
+    else if (req.get('host')) {
+      const protocol = req.get('x-forwarded-proto') || (req.secure ? 'https' : 'http');
+      shareableUrl = `${protocol}://${req.get('host')}`;
+    }
+    // Fallback for production
+    else {
+      shareableUrl = `http://localhost:${port}`;
+    }
+  }
+  // Development mode - use tunnel URL for cross-device testing
+  else {
+    shareableUrl = process.env.DEV_TUNNEL_URL || 'https://ngth2fs5-4000.asse.devtunnels.ms';
+    
+    // Allow override via query parameter for testing
+    if (req.query.tunnelUrl) {
+      shareableUrl = req.query.tunnelUrl;
+    }
   }
   
-  const port = process.env.PORT || 4000;
-  
   res.json({
-    shareableUrl: devTunnelUrl,
+    shareableUrl,
     localUrl: `http://localhost:${port}`,
-    tunnelUrl: devTunnelUrl,
+    tunnelUrl: process.env.DEV_TUNNEL_URL,
     port,
+    environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString()
   });
 });

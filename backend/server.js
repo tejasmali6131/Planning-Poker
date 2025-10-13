@@ -20,20 +20,32 @@ const productionUtils = require('./utils/productionUtils');
 
 const app = express();
 const server = http.createServer(app);
+// Configure CORS origins for different environments
+const allowedOrigins = [
+  "http://localhost:3000", 
+  "http://localhost:4000", 
+  "http://172.17.0.2:4000", 
+  "https://ngth2fs5-4000.asse.devtunnels.ms"
+];
+
+// Add production URL if available (Render provides this automatically)
+if (process.env.RENDER_EXTERNAL_URL) {
+  allowedOrigins.push(process.env.RENDER_EXTERNAL_URL);
+}
+
 const io = require('socket.io')(server, {
   cors: {
-    origin: [
-      "http://localhost:3000", 
-      "http://localhost:4000", 
-      "http://172.17.0.2:4000", 
-      "https://ngth2fs5-4000.asse.devtunnels.ms"
-    ],
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: false
   }
 });
 
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: false
+}));
 app.use(express.json());
 
 // API routes

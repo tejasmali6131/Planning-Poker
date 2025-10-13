@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Navbar from '../components/Navbar';
 import VotingCards from '../components/VotingCards';
 import UsersList from '../components/UsersList';
@@ -54,7 +55,32 @@ export default function GamePage() {
   }, [gameId, username, navigate]);
 
   const handleCopyLink = async () => {
-    await apiService.copyGameLink(gameId);
+    // Generate the current page URL directly
+    const gameLink = `${window.location.origin}/game/${gameId}`;
+    
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(gameLink);
+        toast.success("Game link copied to clipboard!");
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = gameLink;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        if (document.execCommand) {
+          document.execCommand('copy');
+        }
+        
+        document.body.removeChild(textArea);
+        toast.success("Game link copied to clipboard!");
+      }
+    } catch (error) {
+      console.error('Failed to copy link:', error);
+      toast.error("Failed to copy link. Please copy manually: " + gameLink);
+    }
   };
 
   const handleVote = (num) => {
