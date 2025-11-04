@@ -19,6 +19,8 @@
 ## Clean up
     docker system prune -f
 
+## Tar file
+    docker save -o planning-poker.tar planning-poker
 
 
 
